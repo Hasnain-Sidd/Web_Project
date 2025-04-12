@@ -1,0 +1,99 @@
+/* Base Styles */
+:root {
+  --primary: #2a9d8f;       /* Deep teal */
+  --primary-dark: #264653;  /* Dark teal */
+  --secondary: #e76f51;     /* Burnt orange */
+  --accent: #9b5de5;       /* Muted purple */
+  --light: #f8f9fa;
+  --dark: #212529;
+  --success: #4cc9f0;       /* Keeping this as it's recognizable for success */
+  --warning: #f4a261;       /* Soft orange */
+  --danger: #e63946;        /* Vibrant red for important actions */
+  --text: #495057;
+}
+
+/* Navbar */
+.navbar {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-bottom: 3px solid var(--secondary);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+}
+
+.btn-secondary {
+  background-color: var(--secondary);
+  border-color: var(--secondary);
+  color: white;
+}
+
+.btn-accent {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* Cards */
+.card-header {
+  background: linear-gradient(to right, var(--primary), var(--primary-dark));
+  color: white;
+}
+
+/* Tables */
+.table thead th {
+  background: linear-gradient(to right, var(--primary), var(--primary-dark));
+  color: white;
+}
+
+/* Form Focus */
+.form-control:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.25rem rgba(155, 93, 229, 0.25);
+}
+
+/* Alerts */
+.alert-success {
+  background-color: rgba(76, 201, 240, 0.1);
+  border-color: var(--success);
+  color: #0c5460;
+}
+
+.alert-danger {
+  background-color: rgba(230, 57, 70, 0.1);
+  border-color: var(--danger);
+  color: #721c24;
+}
+
+/* Special Elements */
+.highlight {
+  background-color: rgba(231, 111, 81, 0.1);
+  border-left: 4px solid var(--secondary);
+  padding: 1rem;
+}
+/* Footer Styles */
+/* Add these styles to your CSS */
+.footer {
+  background-color: #2a9d8f; /* Your primary color */
+  color: white;
+  margin-top: 2rem; /* Creates automatic gap above footer */
+}
+
+.footer a {
+  color: #e9f7fb;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.small {
+  font-size: 0.85rem;
+}
