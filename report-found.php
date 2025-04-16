@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     }
     else{
-          $error='Failed to Upload!';
+        $error='Failed to Upload!';
     }
     
     $stmt = $conn->prepare("INSERT INTO found_items (user_id, item_name, description, category, date_found, location, image) 
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt->execute()) {
         $success = "Found item reported successfully!";
     } else {
-        $error = "Error reporting the found item.";
+        $error = "Error reporting the found item: " . $conn->error;
     }
     $stmt->close();
 }

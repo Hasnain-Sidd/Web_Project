@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "Has1234#";
-$dbname = "lost_found_db"; // Change this if your database has a different name
+$dbname = "smart_lost_found"; // Change this if your database has a different name
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

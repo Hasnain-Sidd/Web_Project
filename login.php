@@ -8,18 +8,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE email = ?");
+    $stmt = $conn->prepare("SELECT id, username, password, is_admin FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
-    
+
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($user_id, $username, $hashed_password);
+        $stmt->bind_result($user_id, $username, $hashed_password, $is_admin);
         $stmt->fetch();
-        
+
         if (password_verify($password, $hashed_password)) {
             $_SESSION['user_id'] = $user_id;
             $_SESSION['username'] = $username;
+            $_SESSION['admin'] = $is_admin == 1 ? true : false;
+
             header("Location: homepage.php");
             exit();
         } else {
@@ -35,6 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,32 +46,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
 
-<?php include 'includes/header.php'; ?>
+    <?php include 'includes/header.php'; ?>
 
-<div class="container mt-5">
-    <h2 class="text-center">User Login</h2>
-    
-    <?php if (isset($error)): ?>
-        <div class="alert alert-danger text-center"><?php echo $error; ?></div>
-    <?php endif; ?>
+    <div class="container mt-5">
+        <h2 class="text-center">User Login</h2>
 
-    <form action="login.php" method="POST" class="w-50 mx-auto">
-        <div class="mb-3">
-            <label>Email:</label>
-            <input type="email" name="email" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label>Password:</label>
-            <input type="password" name="password" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Login</button>
-        <p class="mt-3 text-center">Don't have an account? <a href="register.php">Register</a></p>
-    </form>
-</div>
+        <?php if (isset($error)): ?>
+            <div class="alert alert-danger text-center"><?php echo $error; ?></div>
+        <?php endif; ?>
 
-<?php include 'includes/footer.php'; ?>
+        <form action="login.php" method="POST" class="w-50 mx-auto">
+            <div class="mb-3">
+                <label>Email:</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label>Password:</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+            <p class="mt-3 text-center">Don't have an account? <a href="register.php">Register</a></p>
+        </form>
+    </div>
+
+    <?php include 'includes/footer.php'; ?>
 
 </body>
+
 </html>

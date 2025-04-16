@@ -9,22 +9,33 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$user_id = $_SESSION['user_id'];
+$current_user_id = $_SESSION['user_id'];
 
 // Fetch lost items of the logged-in user
 $query = "SELECT * FROM lost_items WHERE user_id = ?";
 $stmt = $conn->prepare($query);
-$stmt->bind_param("i", $user_id);
+$stmt->bind_param("i", $current_user_id);
 $stmt->execute();
 $lost_items = $stmt->get_result();
 
-function findMatches($conn, $category, $location) {
-    $query = "SELECT * FROM found_items WHERE category = ? AND location = ?";
+function findMatches($conn, $category, $location, $date_lost, $current_user_id) {
+    $query = "SELECT fi.*, u.username 
+              FROM found_items fi
+              JOIN users u ON fi.user_id = u.id
+              WHERE fi.category = ? 
+              AND fi.location LIKE ?
+              AND fi.date_found >= ?
+              AND fi.user_id != ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("ss", $category, $location);
+
+    // Use a temporary variable for location
+    $like_location = "%$location%";
+
+    $stmt->bind_param("sssi", $category, $like_location, $date_lost, $current_user_id);
     $stmt->execute();
     return $stmt->get_result();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -50,15 +61,17 @@ function findMatches($conn, $category, $location) {
                 <h5 class="card-title">Lost Item: <?php echo htmlspecialchars($lost['item_name']); ?></h5>
                 <p><strong>Category:</strong> <?php echo htmlspecialchars($lost['category']); ?></p>
                 <p><strong>Location:</strong> <?php echo htmlspecialchars($lost['location']); ?></p>
+                <p><strong>Lost Date:</strong> <?php echo htmlspecialchars($lost['date_lost']); ?></p>
 
                 <h6>Possible Matches:</h6>
                 <?php
-                $matches = findMatches($conn, $lost['category'], $lost['location']);
+                $matches = findMatches($conn, $lost['category'], $lost['location'], $lost['date_lost'], $current_user_id);
                 if ($matches->num_rows > 0):
                     while ($match = $matches->fetch_assoc()):
                 ?>
                     <div class="border p-2 mb-2">
                         <p><strong>Found Item:</strong> <?php echo htmlspecialchars($match['item_name']); ?></p>
+                        <p><strong>Found By:</strong> <?php echo htmlspecialchars($match['username']); ?></p>
                         <img src="<?php echo htmlspecialchars($match['image']); ?>" width="100">
                     </div>
                 <?php endwhile; else: ?>

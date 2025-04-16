@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt->execute()) {
         $success = "Lost item reported successfully!";
     } else {
-        $error = "Error reporting the lost item.";
+        $error = "Error reporting the lost item: " . $conn->error;
     }
     $stmt->close();
 }
@@ -95,13 +95,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="file" name="image" class="form-control" required>
         </div>
         <button type="submit" class="btn btn-primary w-100">Report Lost Item</button>
-
-
-        
     </form>
 </div>
-
-
 
 <?php include 'includes/footer.php'; ?>
 
